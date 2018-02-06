@@ -1,0 +1,47 @@
+<!-- Main content -->
+    <div id="layout">
+
+        <div id="main">
+            <div class="header">
+                <h1>Weekly Virtue</h1>
+                <h3>Hello</h3>
+                  <h5>Hello</h5>
+            </div>
+
+            <div class="content2">
+                <h2 class="content-subhead">Weekly Progress</h2>
+                <p>
+                    Place an x if you messed up on a day.
+                </p>
+
+                <table class="pure-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Virtue</th>
+                            <th>M</th>
+                            <th>T</th>
+                            <th>W</th>
+                            <th>Th</th>
+                            <th>F</th>
+                            <th>S</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <% @weeks.each do |week| %>
+                      <tr>
+                        <td>1</td>
+                        <td>x</td>
+                        <td>x</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+              </table>
+            </div>
+        </div>
+    </div>
