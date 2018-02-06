@@ -30,14 +30,14 @@
                     <tbody>
                     <% @weeks.each do |week| %>
                       <tr>
-                        <td>1</td>
-                        <td>x</td>
-                        <td>x</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td> <%=  week.number %></td>
+                        <td> <%=  week.virtue %></td>
+                        <td><%=  week.monday %></td>
+                        <td><%=  week.tuesday %></td>
+                        <td><%=  week.wednesday %></td>
+                        <td><%=  week.thursday %></td>
+                        <td><%=  week.friday %></td>
+                        <td><%=  week.saturday %></td>
                       </tr>
                     <% end %>
                   </tbody>
