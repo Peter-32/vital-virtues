@@ -1,3 +1,25 @@
-html, body {
-  font-size: 8px
+
+
+@media (max-width: 750px) {
+
+  html, body {
+    font-size: 12px
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  html, body {
+    font-size: 10px
+  }
+
+}
+
+@media (max-width: 425px) {
+
+  html, body {
+    font-size: 8px
+  }
+
 }
