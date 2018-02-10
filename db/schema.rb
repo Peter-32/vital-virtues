@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 20180206165626) do
     t.string "day"
     t.date "start_date"
     t.string "virtue"
+    t.string "description"
+    t.string "website"
     t.string "sunday"
     t.string "monday"
     t.string "tuesday"

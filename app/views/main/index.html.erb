@@ -3,17 +3,17 @@
 
         <div id="main">
             <div class="header">
-                <h1>Weekly Virtue</h1>
+                
                 <% @days.each do |day| %>
-                <h3><%=  day.virtue %></h3>
-                  <h5><%=  day.virtue %></h5>
+                <h1><%=  day.virtue %></h3>
+                  <h3><%=  day.description %></h5>
                   <% end %>
             </div>
 
             <div class="content2">
                 <h2 class="content-subhead">Weekly Progress</h2>
                 <p>
-                    An x means you messed up on a day.
+                    An X means you messed up on a day.
                 </p>
 
                 <%= form_tag(messed_up_path, :method => "post", id: "messed-up-form", class: "form-inline") do %>
@@ -62,7 +62,9 @@
             </div>
         </div>
     </div>
+    <br>
+    <br>
+    <br>
     <% @days.each do |day| %>
-    <h3><%=  day.virtue %></h3>
-      <h5><%=  day.virtue %></h5>
+      <h5><a href=<%=  day.website %>>Source</a> of Virtue Description</h5>
       <% end %>
