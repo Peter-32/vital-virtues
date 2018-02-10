@@ -1,9 +1,14 @@
 class MainController < ApplicationController
 
   def index
-    time = Time.now.to_s(:db)
-    @weeks = Week.find_by_sql("SELECT id, week_number, day, start_date, virtue, sunday, monday, tuesday, wednesday, thursday, friday, saturday FROM weeks ORDER BY id ASC")
-    @days = Week.find_by_sql("SELECT virtue, description, website FROM weeks a INNER JOIN (SELECT MAX(start_date) AS start_date FROM weeks where start_date < '#{time}') b on a.start_date = b.start_date")
+    if logged_in?
+      time = Time.now.to_s(:db)
+      @weeks = Week.find_by_sql("SELECT id, week_number, day, start_date, virtue, sunday, monday, tuesday, wednesday, thursday, friday, saturday FROM weeks ORDER BY id ASC")
+      @days = Week.find_by_sql("SELECT virtue, description, website FROM weeks a INNER JOIN (SELECT MAX(start_date) AS start_date FROM weeks where start_date < '#{time}') b on a.start_date = b.start_date")
+      @user = current_user
+    else
+      redirect_to home_path
+    end
   end
 
   def reset
@@ -148,6 +153,14 @@ class MainController < ApplicationController
       wday_name = "saturday"
     end
     return wday_name
+  end
+
+  def logged_in?
+    !current_user.nil?
+  end
+
+  def current_user
+    @current_user ||= User.find_by(id: session[:user_id])
   end
 
 end

@@ -3,18 +3,26 @@
 
         <div id="main">
             <div class="header">
-                
+
                 <% @days.each do |day| %>
-                <h1><%=  day.virtue %></h3>
-                  <h3><%=  day.description %></h5>
+                <h1><%=  day.virtue %></h1>
+                  <h3><%=  day.description %></h3>
                   <% end %>
+
+
+
             </div>
 
             <div class="content2">
                 <h2 class="content-subhead">Weekly Progress</h2>
+                <h5><%=  @user.name %></h5>
                 <p>
                     An X means you messed up on a day.
                 </p>
+
+                <%= form_tag(messed_up_path, :method => "post", id: "messed-up-form", class: "form-inline") do %>
+                <%= submit_tag "Messed Up", :name => nil, class: "btn btn-outline-primary my-2", id: "messed_up_button" %>
+                <% end %>
 
                 <%= form_tag(messed_up_path, :method => "post", id: "messed-up-form", class: "form-inline") do %>
                 <%= submit_tag "Messed Up", :name => nil, class: "btn btn-outline-primary my-2", id: "messed_up_button" %>
@@ -65,6 +73,7 @@
     <br>
     <br>
     <br>
+    <%= button_to "Log out", logout_path, method: "delete", class: "btn btn-primary"%>
     <% @days.each do |day| %>
       <h5><a href=<%=  day.website %>>Source</a> of Virtue Description</h5>
       <% end %>
