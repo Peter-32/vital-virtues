@@ -11,14 +11,24 @@
             <div class="content2">
                 <h2 class="content-subhead">Weekly Progress</h2>
                 <p>
-                    Place an x if you messed up on a day.
+                    An x means you messed up on a day.
                 </p>
+
+                <%= form_tag(messed_up_path, :method => "post", id: "messed-up-form", class: "form-inline") do %>
+                <%= submit_tag "Messed Up", :name => nil, class: "btn btn-outline-primary my-2", id: "messed_up_button" %>
+                <% end %>
+
+                <%= form_tag(undo_path, :method => "post", id: "undo-form", class: "form-inline") do %>
+                <%= submit_tag "Undo", :name => nil, class: "btn btn-outline-primary my-2", id: "undo_button" %>
+                <% end %>
 
                 <table class="pure-table">
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Day</th>
                             <th>Virtue</th>
+                            <th>S</th>
                             <th>M</th>
                             <th>T</th>
                             <th>W</th>
@@ -30,8 +40,10 @@
                     <tbody>
                     <% @weeks.each do |week| %>
                       <tr>
-                        <td> <%=  week.number %></td>
+                        <td> <%=  week.week_number %></td>
+                        <td> <%=  week.day %></td>
                         <td> <%=  week.virtue %></td>
+                        <td><%=  week.sunday %></td>
                         <td><%=  week.monday %></td>
                         <td><%=  week.tuesday %></td>
                         <td><%=  week.wednesday %></td>
@@ -42,6 +54,9 @@
                     <% end %>
                   </tbody>
               </table>
+              <%= form_tag(reset_path, :method => "post", id: "reset-form", class: "form-inline") do %>
+              <%= submit_tag "Reset", :name => nil, class: "btn btn-outline-danger my-2", id: "reset_button" %>
+              <% end %>
             </div>
         </div>
     </div>
