@@ -4,8 +4,10 @@
         <div id="main">
             <div class="header">
                 <h1>Weekly Virtue</h1>
-                <h3>Hello</h3>
-                  <h5>Hello</h5>
+                <% @days.each do |day| %>
+                <h3><%=  day.virtue %></h3>
+                  <h5><%=  day.virtue %></h5>
+                  <% end %>
             </div>
 
             <div class="content2">
@@ -60,3 +62,7 @@
             </div>
         </div>
     </div>
+    <% @days.each do |day| %>
+    <h3><%=  day.virtue %></h3>
+      <h5><%=  day.virtue %></h5>
+      <% end %>

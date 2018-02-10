@@ -1,7 +1,9 @@
 class MainController < ApplicationController
 
   def index
+    time = Time.now.to_s(:db)
     @weeks = Week.find_by_sql("SELECT id, week_number, day, start_date, virtue, sunday, monday, tuesday, wednesday, thursday, friday, saturday FROM weeks ORDER BY id ASC")
+    @days = Week.find_by_sql("SELECT virtue FROM weeks a INNER JOIN (SELECT MAX(start_date) AS start_date FROM weeks where start_date < '#{time}') b on a.start_date = b.start_date")
   end
 
   def reset
@@ -18,20 +20,21 @@ class MainController < ApplicationController
     row = 1
     random_virtues.each do |random_virtue|
       #newTime.to_s(:db)
-      inserts.push "(#{row}, '#{newTime.mday}', '#{newTime}', '#{random_virtue}', '#{time}', '#{time}')"
+      inserts.push "(#{row}, '#{newTime.mday}', '#{newTime}', '#{random_virtue}', '#{random_description}', '#{random_website}'  '#{time}', '#{time}')"
       newTime = newTime + 24*60*60*7
       row = row + 1
     end
-    sql = "INSERT INTO weeks (week_number, day, start_date, virtue, created_at, updated_at) VALUES #{inserts.join(", ")}"
+    sql = "INSERT INTO weeks (week_number, day, start_date, virtue, description, website, created_at, updated_at) VALUES #{inserts.join(", ")}"
     ActiveRecord::Base.connection.execute(sql)
 
     redirect_to main_path
   end
 
   def _get_random_virtues
+    # Use a dictionary here with 3 qualities
     virtues = ["Idealism","Creativity","Flexibility","Unity","Frugality","Temperance","Moderation","Tranquility","Humanity","Equanimity","Detachment","Determination","Discipline","Consistency","Industry","Reliable","Responsible","Excellence","Bravery","Resolution","Assertiveness","Honor","Confidence","Courage",
       "Obedience","Purity","Order","Cleanliness","Chastity","Humility","Justice","Modesty","Reverence","Respect","Hope","Joyfulness","Enthusiasm","Honesty","Truthfulness","Sincerity","Trustworthiness",
-      "Faith","Prayerfulness","Wisdom","Kindness","Silence","Gentleness","Caring","Consideration","Courtesy","Tolerance","Faithfulness","Friendliness","Generosity","Service","Charity","Helpfulness","Patience","Forgiveness,","Mercy","Love","Trust","Thankfulness"]
+      "Faith","Prayerfulness","Wisdom","Kindness","Silence","Gentleness","Caring","Consideration","Courtesy","Tolerance","Faithfulness","Friendliness","Generosity","Service","Charity","Helpfulness","Patience","Forgiveness","Mercy","Love","Trust","Thankfulness"]
     random_virtues = virtues.sample(12)
     return random_virtues
   end
