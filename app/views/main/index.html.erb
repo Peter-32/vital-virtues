@@ -24,10 +24,6 @@
                 <%= submit_tag "Messed Up", :name => nil, class: "btn btn-outline-primary my-2", id: "messed_up_button" %>
                 <% end %>
 
-                <%= form_tag(messed_up_path, :method => "post", id: "messed-up-form", class: "form-inline") do %>
-                <%= submit_tag "Messed Up", :name => nil, class: "btn btn-outline-primary my-2", id: "messed_up_button" %>
-                <% end %>
-
                 <%= form_tag(undo_path, :method => "post", id: "undo-form", class: "form-inline") do %>
                 <%= submit_tag "Undo", :name => nil, class: "btn btn-outline-primary my-2", id: "undo_button" %>
                 <% end %>

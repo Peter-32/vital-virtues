@@ -4,8 +4,8 @@ class MainController < ApplicationController
     if logged_in?
       time = Time.now.to_s(:db)
       @user_name = current_user.username
-      @weeks = Week.find_by_sql("SELECT id, week_number, day, start_date, virtue, sunday, monday, tuesday, wednesday, thursday, friday, saturday FROM weeks WHERE user = '#{@user_name}' ORDER BY id ASC")
-      @days = Week.find_by_sql("SELECT virtue, description, website FROM weeks a INNER JOIN (SELECT MAX(start_date) AS start_date FROM weeks WHERE user = '#{@user_name}' and start_date < '#{time}') b on a.start_date = b.start_date  WHERE user = '#{@user_name}'")
+      @weeks = Week.find_by_sql("SELECT id, week_number, day, start_date, virtue, sunday, monday, tuesday, wednesday, thursday, friday, saturday FROM weeks WHERE username = '#{@user_name}' ORDER BY id ASC")
+      @days = Week.find_by_sql("SELECT virtue, description, website FROM weeks a INNER JOIN (SELECT MAX(start_date) AS start_date FROM weeks WHERE username = '#{@user_name}' and start_date < '#{time}') b on a.start_date = b.start_date  WHERE username = '#{@user_name}'")
 
     else
       redirect_to home_path
@@ -78,7 +78,7 @@ class MainController < ApplicationController
 ["Prayerfulness",	"about:blank",	"Prays daily"],
 ["Wisdom",	"https://en.m.wikipedia.org/wiki/Wisdom",	"The ability to think and act using knowledge, experience, understanding, common sense, and insight"],
 ["Kindness",	"https://en.m.wikipedia.org/wiki/Kindness",	"A pleasant disposition, and a concern for others"],
-["Silence",	"about:blank",	"Avoid triffling conversions.  Speak when it will benefit others or you."],
+["Silence",	"about:blank",	"Avoid triffling conversions.  Speak when it will benefit others or yourself."],
 ["Gentleness",	"https://en.m.wikipedia.org/wiki/Gentleness",	"Being detached in a situation where anger is appropriate; justified and properly focused anger is named mildness or gentleness"],
 ["Courtesy",	"https://en.m.wikipedia.org/wiki/Courtesy",	"Is gentle politeness and courtlymanners"],
 ["Tolerance",	"https://en.m.wikipedia.org/wiki/Toleration",	"The acceptance of an action, object, or person which one dislikes or disagrees with, where one is in a position to disallow it but chooses not to"],
@@ -110,7 +110,7 @@ class MainController < ApplicationController
 
   def _update_today_as(new_value)
     @user_name = current_user.username
-    weeks = Week.find_by_sql("SELECT week_number, start_date FROM weeks  WHERE user = '#{@user_name}' ORDER BY id asc")
+    weeks = Week.find_by_sql("SELECT week_number, start_date FROM weeks  WHERE username = '#{@user_name}' ORDER BY id asc")
     time = Time.now
     puts time
     weeks.each do |week|
@@ -122,7 +122,7 @@ class MainController < ApplicationController
         wday = week.start_date.day - time.day
         wday = 7 - wday
         wday_name = _getWDayName(wday)
-        sql = "UPDATE weeks SET #{wday_name} = '#{new_value}'  WHERE user = '#{@user_name}' and week_number = '#{week_number}'"
+        sql = "UPDATE weeks SET #{wday_name} = '#{new_value}'  WHERE username = '#{@user_name}' and week_number = '#{week_number}'"
         ActiveRecord::Base.connection.execute(sql)
         return
       end
@@ -130,7 +130,7 @@ class MainController < ApplicationController
     week_number = 12
     wday = last_date - time
     wday_name = _getWDayName(wday)
-    sql = "UPDATE weeks SET #{wday_name} = '#{new_value}'  WHERE user = '#{@user_name}'  and week_number = '#{week_number}'"
+    sql = "UPDATE weeks SET #{wday_name} = '#{new_value}'  WHERE username = '#{@user_name}'  and week_number = '#{week_number}'"
     ActiveRecord::Base.connection.execute(sql)
   end
 

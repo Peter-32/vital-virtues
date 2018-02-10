@@ -16,14 +16,14 @@ ActiveRecord::Schema.define(version: 20180210181011) do
   enable_extension "plpgsql"
 
   create_table "users", force: :cascade do |t|
-    t.string "name"
+    t.string "username"
     t.string "status", default: "ACTIVE"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "weeks", force: :cascade do |t|
-    t.string "user"
+    t.string "username"
     t.string "week_number"
     t.string "day"
     t.date "start_date"
