@@ -1,6 +1,7 @@
 class CreateWeeks < ActiveRecord::Migration[5.1]
   def change
     create_table :weeks do |t|
+      t.string :username
       t.string :week_number
       t.string :day
       t.date :start_date

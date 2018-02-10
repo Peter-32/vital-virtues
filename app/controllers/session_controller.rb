@@ -8,7 +8,7 @@ class SessionController < ApplicationController
     @current_user = nil
   end
   def create
-    user = User.find_by(name: params[:session][:name])
+    user = User.find_by(username: params[:session][:username])
     if user && user.status == "ACTIVE"
       log_in(user)
     else

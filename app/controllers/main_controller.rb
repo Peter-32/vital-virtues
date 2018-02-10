@@ -3,16 +3,18 @@ class MainController < ApplicationController
   def index
     if logged_in?
       time = Time.now.to_s(:db)
-      @weeks = Week.find_by_sql("SELECT id, week_number, day, start_date, virtue, sunday, monday, tuesday, wednesday, thursday, friday, saturday FROM weeks ORDER BY id ASC")
-      @days = Week.find_by_sql("SELECT virtue, description, website FROM weeks a INNER JOIN (SELECT MAX(start_date) AS start_date FROM weeks where start_date < '#{time}') b on a.start_date = b.start_date")
-      @user = current_user
+      @user_name = current_user.username
+      @weeks = Week.find_by_sql("SELECT id, week_number, day, start_date, virtue, sunday, monday, tuesday, wednesday, thursday, friday, saturday FROM weeks WHERE user = '#{@user_name}' ORDER BY id ASC")
+      @days = Week.find_by_sql("SELECT virtue, description, website FROM weeks a INNER JOIN (SELECT MAX(start_date) AS start_date FROM weeks WHERE user = '#{@user_name}' and start_date < '#{time}') b on a.start_date = b.start_date  WHERE user = '#{@user_name}'")
+
     else
       redirect_to home_path
     end
   end
 
   def reset
-    sql = "DELETE FROM weeks"
+    @user_name = current_user.username
+    sql = "DELETE FROM weeks WHERE user = '#{@user_name}' "
     ActiveRecord::Base.connection.execute(sql)
 
     random_virtues = _get_random_virtues
@@ -25,11 +27,11 @@ class MainController < ApplicationController
     row = 1
     random_virtues.each do |random_virtue|
       #newTime.to_s(:db)
-      inserts.push "(#{row}, '#{newTime.mday}', '#{newTime}', '#{random_virtue[0]}', '#{random_virtue[2]}', '#{random_virtue[1]}',  '#{time}', '#{time}')"
+      inserts.push "('#{@user_name}', #{row}, '#{newTime.mday}', '#{newTime}', '#{random_virtue[0]}', '#{random_virtue[2]}', '#{random_virtue[1]}',  '#{time}', '#{time}')"
       newTime = newTime + 24*60*60*7
       row = row + 1
     end
-    sql = "INSERT INTO weeks (week_number, day, start_date, virtue, description, website, created_at, updated_at) VALUES #{inserts.join(", ")}"
+    sql = "INSERT INTO weeks (username, week_number, day, start_date, virtue, description, website, created_at, updated_at) VALUES #{inserts.join(", ")}"
     ActiveRecord::Base.connection.execute(sql)
 
     redirect_to main_path
@@ -107,11 +109,8 @@ class MainController < ApplicationController
   end
 
   def _update_today_as(new_value)
-    weeks = Week.find_by_sql("SELECT week_number, start_date FROM weeks ORDER BY id asc")
-    # correct_id = nil
-    # wday = nil
-    # wday_name = nil
-    # last_date = nil
+    @user_name = current_user.username
+    weeks = Week.find_by_sql("SELECT week_number, start_date FROM weeks  WHERE user = '#{@user_name}' ORDER BY id asc")
     time = Time.now
     puts time
     weeks.each do |week|
@@ -123,7 +122,7 @@ class MainController < ApplicationController
         wday = week.start_date.day - time.day
         wday = 7 - wday
         wday_name = _getWDayName(wday)
-        sql = "UPDATE weeks SET #{wday_name} = '#{new_value}' WHERE week_number = '#{week_number}'"
+        sql = "UPDATE weeks SET #{wday_name} = '#{new_value}'  WHERE user = '#{@user_name}' and week_number = '#{week_number}'"
         ActiveRecord::Base.connection.execute(sql)
         return
       end
@@ -131,7 +130,7 @@ class MainController < ApplicationController
     week_number = 12
     wday = last_date - time
     wday_name = _getWDayName(wday)
-    sql = "UPDATE weeks SET #{wday_name} = '#{new_value}' WHERE week_number = '#{week_number}'"
+    sql = "UPDATE weeks SET #{wday_name} = '#{new_value}'  WHERE user = '#{@user_name}'  and week_number = '#{week_number}'"
     ActiveRecord::Base.connection.execute(sql)
   end
 

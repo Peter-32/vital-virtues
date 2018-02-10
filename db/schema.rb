@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 20180210181011) do
   end
 
   create_table "weeks", force: :cascade do |t|
+    t.string "user"
     t.string "week_number"
     t.string "day"
     t.date "start_date"
