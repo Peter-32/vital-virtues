@@ -14,7 +14,7 @@ class MainController < ApplicationController
 
   def reset
     @user_name = current_user.username
-    sql = "DELETE FROM weeks WHERE user = '#{@user_name}' "
+    sql = "DELETE FROM weeks WHERE username = '#{@user_name}' "
     ActiveRecord::Base.connection.execute(sql)
 
     random_virtues = _get_random_virtues
