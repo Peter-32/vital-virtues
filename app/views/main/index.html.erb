@@ -69,7 +69,7 @@
   <%= form_tag(reset_path, :method => "post", id: "reset-form", class: "form-inline") do %>
   <%= submit_tag "Reset", :name => nil, class: "btn btn-outline-danger my-2", id: "reset_button" %>
   <% end %>
-    <%= button_to "Log out", logout_path, method: "delete", class: "btn btn-primary"%>
+    <%= button_to "Log out", logout_path, method: "delete", class: "btn btn-outline-primary"%>
     <% @days.each do |day| %>
     <br>
       <h5><a href=<%=  day.website %>>Source</a> of Virtue Description</h5>
