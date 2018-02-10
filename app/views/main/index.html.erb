@@ -9,24 +9,23 @@
                   <h3><%=  day.description %></h3>
                   <% end %>
 
+                  <h5><%=  @user_name %></h5>
+                  <p>
+                      An X means you messed up on a day.
+                  </p>
+
+                                  <%= form_tag(messed_up_path, :method => "post", id: "messed-up-form", class: "form-inline") do %>
+                                  <%= submit_tag "Messed Up", :name => nil, class: "btn btn-outline-primary my-2", id: "messed_up_button" %>
+                                  <% end %>
+
+                                  <%= form_tag(undo_path, :method => "post", id: "undo-form", class: "form-inline") do %>
+                                  <%= submit_tag "Undo", :name => nil, class: "btn btn-outline-primary my-2", id: "undo_button" %>
+                                  <% end %>
 
 
             </div>
 
-            <div class="content2">
-                <h2 class="content-subhead">Weekly Progress</h2>
-                <h5><%=  @user_name %></h5>
-                <p>
-                    An X means you messed up on a day.
-                </p>
-
-                <%= form_tag(messed_up_path, :method => "post", id: "messed-up-form", class: "form-inline") do %>
-                <%= submit_tag "Messed Up", :name => nil, class: "btn btn-outline-primary my-2", id: "messed_up_button" %>
-                <% end %>
-
-                <%= form_tag(undo_path, :method => "post", id: "undo-form", class: "form-inline") do %>
-                <%= submit_tag "Undo", :name => nil, class: "btn btn-outline-primary my-2", id: "undo_button" %>
-                <% end %>
+            <div class="header">
 
                 <table class="pure-table">
                     <thead>
@@ -60,16 +59,20 @@
                     <% end %>
                   </tbody>
               </table>
-              <%= form_tag(reset_path, :method => "post", id: "reset-form", class: "form-inline") do %>
-              <%= submit_tag "Reset", :name => nil, class: "btn btn-outline-danger my-2", id: "reset_button" %>
-              <% end %>
+
             </div>
+
         </div>
     </div>
-    <br>
-    <br>
-    <br>
+
+<div class="header">
+  <%= form_tag(reset_path, :method => "post", id: "reset-form", class: "form-inline") do %>
+  <%= submit_tag "Reset", :name => nil, class: "btn btn-outline-danger my-2", id: "reset_button" %>
+  <% end %>
     <%= button_to "Log out", logout_path, method: "delete", class: "btn btn-primary"%>
     <% @days.each do |day| %>
+    <br>
       <h5><a href=<%=  day.website %>>Source</a> of Virtue Description</h5>
+      <br>
       <% end %>
+</div>
