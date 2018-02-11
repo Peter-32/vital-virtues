@@ -1,11 +1,11 @@
 class MainController < ApplicationController
-  # skip_before_action :verify_authenticity_token  
+  # skip_before_action :verify_authenticity_token
 
   def index
     if logged_in?
-      time = Time.now.to_s(:db)
+      time = Time.now.in_time_zone("Pacific Time (US & Canada)").to_s(:db)
       @user_name = current_user.username
-      @weeks = Week.find_by_sql("SELECT id, week_number, day, start_date, virtue, sunday, monday, tuesday, wednesday, thursday, friday, saturday FROM weeks WHERE username = '#{@user_name}' ORDER BY id ASC")
+      @weeks = Week.find_by_sql("SELECT id, week_number, day, start_date, virtue, sunday, monday, tuesday, wednesday, thursday, friday, saturday FROM weeks WHERE username = '#{@user_name}' ORDER BY id ASC LIMIT 12")
       @days = Week.find_by_sql("SELECT virtue, description, website FROM weeks a INNER JOIN (SELECT MAX(start_date) AS start_date FROM weeks WHERE username = '#{@user_name}' and start_date < '#{time}') b on a.start_date = b.start_date  WHERE username = '#{@user_name}'")
 
     else
@@ -21,14 +21,13 @@ class MainController < ApplicationController
     random_virtues = _get_random_virtues
 
     inserts = []
-    time = Time.now.to_s(:db)
-    newTime = Time.now
+    time = Time.now.in_time_zone("Pacific Time (US & Canada)").to_s(:db)
+    newTime = Time.now.in_time_zone("Pacific Time (US & Canada)")
     newTime = newTime - newTime.wday*24*60*60
 
     row = 1
     random_virtues.each do |random_virtue|
-      #newTime.to_s(:db)
-      inserts.push "('#{@user_name}', #{row}, '#{newTime.mday}', '#{newTime}', '#{random_virtue[0]}', '#{random_virtue[2]}', '#{random_virtue[1]}',  '#{time}', '#{time}')"
+      inserts.push "('#{@user_name}', #{row}, '#{newTime.mday}', '#{newTime.beginning_of_day}', '#{random_virtue[0]}', '#{random_virtue[2]}', '#{random_virtue[1]}',  '#{time}', '#{time}')"
       newTime = newTime + 24*60*60*7
       row = row + 1
     end
@@ -95,7 +94,7 @@ class MainController < ApplicationController
 ["Love",	"https://en.m.wikipedia.org/wiki/Love",	"Encompasses a variety of different emotional and mental states, typically strongly and positively experienced, ranging from the deepest interpersonal affection to the simplest pleasure"],
 ["Trust",	"https://en.m.wikipedia.org/wiki/Trust_(emotion)",	"Can abandon control over your actions to others and have a good degree of certainty of the outcome of your actions"],
 ["Thankfulness",	"https://en.m.wikipedia.org/wiki/Gratitude",	"A feeling of appreciation felt by and/or similar positive response shown by the recipient of kindness, gifts, help, favors, or other types of generosity, towards the giver of such gifts"]]
-    random_virtues = virtues.sample(12)
+    random_virtues = virtues.sample(13)
     return random_virtues
   end
 
@@ -112,31 +111,29 @@ class MainController < ApplicationController
   def _update_today_as(new_value)
     @user_name = current_user.username
     weeks = Week.find_by_sql("SELECT week_number, start_date FROM weeks  WHERE username = '#{@user_name}' ORDER BY id asc")
-    time = Time.now
-    puts time
+    time = Time.now.in_time_zone("Pacific Time (US & Canada)").to_date
     weeks.each do |week|
       last_date = week.start_date
-      if (time < week.start_date)
-        puts week.start_date
-        week_number = week.week_number.to_i - 1
-        puts week_number
-        wday = week.start_date.day - time.day
+      if (time <= week.start_date)
+        week_number = week.week_number.to_i
+        week_number = week_number - 1
+        wday = week.start_date - time
         wday = 7 - wday
+        wday = wday.to_i
         wday_name = _getWDayName(wday)
+        if wday_name == 'sunday'
+          week_number = week_number + 1
+        end
         sql = "UPDATE weeks SET #{wday_name} = '#{new_value}'  WHERE username = '#{@user_name}' and week_number = '#{week_number}'"
         ActiveRecord::Base.connection.execute(sql)
         return
       end
     end
-    week_number = 12
-    wday = last_date - time
-    wday_name = _getWDayName(wday)
-    sql = "UPDATE weeks SET #{wday_name} = '#{new_value}'  WHERE username = '#{@user_name}'  and week_number = '#{week_number}'"
-    ActiveRecord::Base.connection.execute(sql)
   end
 
   def _getWDayName(wday)
     wday_name = nil
+    wday = wday % 7
     if (wday == 0)
       wday_name = "sunday"
     elsif (wday == 1)
