@@ -1,4 +1,6 @@
 class UserController < ApplicationController
+  # skip_before_action :verify_authenticity_token
+
   def create
     @user = User.new(params.require(:user).permit(:username))
     does_user_exist = User.find_by_sql("SELECT 1 AS result FROM users WHERE username = '#{params[:user][:username]}' LIMIT 1")

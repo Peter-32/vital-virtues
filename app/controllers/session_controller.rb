@@ -1,4 +1,6 @@
 class SessionController < ApplicationController
+  # skip_before_action :verify_authenticity_token
+
   def log_in(user)
     session[:user_id] = user.id
   end
